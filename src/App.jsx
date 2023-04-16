@@ -1,12 +1,12 @@
-import './App.css'
-import UserSignUpPage from './UserSignUpPage'
+import "./App.css";
+import UserSignUpPage from "./pages/UserSignUpPage";
 
 function App() {
   return (
     <div>
       <UserSignUpPage></UserSignUpPage>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
