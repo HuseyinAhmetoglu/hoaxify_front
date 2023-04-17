@@ -23,9 +23,20 @@ function UserSignUpPage() {
   const onChangePassword = (event) => {
     errors.password = undefined;
     setPassword(event.target.value);
+    if (event.target.value != passwordRepeat) {
+      errors.passwordRepeat = "Password mismatch!";
+    } else {
+      errors.passwordRepeat = undefined;
+    }
   };
   const onChangePasswordRepeat = (event) => {
+    errors.passwordRepeat = undefined;
     setPasswordRepeat(event.target.value);
+    if (event.target.value != password) {
+      errors.passwordRepeat = "Password mismatch!";
+    } else {
+      errors.passwordRepeat = undefined;
+    }
   };
 
   const onClickSignUp = async (event) => {
@@ -48,42 +59,41 @@ function UserSignUpPage() {
 
   return (
     <div className="container">
-      <h1 className="text-center">User Sign Up</h1>
+      <h1 className="text-center">Kayıt Ol</h1>
       <form>
         <Input
-          label="Username"
+          label="Kullanıcı Adı"
           error={errors.username}
           onChange={onChangeUsername}
         ></Input>
         <Input
-          label="Display Name"
+          label="Tercih edilen isim"
           error={errors.displayName}
           onChange={onChangeDisplayName}
         ></Input>
         <Input
-          label="Password"
+          label="Parola"
           error={errors.password}
           onChange={onChangePassword}
           type={"password"}
         ></Input>
-        <div className="form-group m-3">
-          <label>Password Repeat</label>
-          <input
-            className="form-control"
-            type="password"
-            onChange={onChangePasswordRepeat}
-          ></input>
-        </div>
+        <Input
+          label="Parolayı Tekrarla"
+          error={errors.passwordRepeat}
+          onChange={onChangePasswordRepeat}
+          type={"password"}
+        ></Input>
+
         <div className="text-center m-3">
           <button
             className="btn btn-primary"
             onClick={onClickSignUp}
-            disabled={pendingApiCall}
+            disabled={pendingApiCall || errors.passwordRepeat != undefined}
           >
             {pendingApiCall && (
               <span className="spinner-border spinner-border-sm"></span>
             )}{" "}
-            Sign Up
+            Kayıt ol
           </button>
         </div>
       </form>
