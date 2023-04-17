@@ -21,6 +21,7 @@ function UserSignUpPage() {
     setDisplayName(event.target.value);
   };
   const onChangePassword = (event) => {
+    errors.password = undefined;
     setPassword(event.target.value);
   };
   const onChangePasswordRepeat = (event) => {
@@ -59,14 +60,12 @@ function UserSignUpPage() {
           error={errors.displayName}
           onChange={onChangeDisplayName}
         ></Input>
-        <div className="form-group m-3">
-          <label>Password</label>
-          <input
-            className="form-control"
-            type="password"
-            onChange={onChangePassword}
-          ></input>
-        </div>
+        <Input
+          label="Password"
+          error={errors.password}
+          onChange={onChangePassword}
+          type={"password"}
+        ></Input>
         <div className="form-group m-3">
           <label>Password Repeat</label>
           <input
