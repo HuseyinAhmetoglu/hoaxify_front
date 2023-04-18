@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "../bootstrap-override.scss";
 import { signUp } from "../api/apiCalls";
 import Input from "../components/Input";
+import ButtonWithProgress from "../components/ButtonWithProgress";
 
 function UserSignUpPage() {
   const [username, setUsername] = useState("");
@@ -24,7 +25,7 @@ function UserSignUpPage() {
     errors.password = undefined;
     setPassword(event.target.value);
     if (event.target.value != passwordRepeat) {
-      errors.passwordRepeat = "Password mismatch!";
+      errors.passwordRepeat = "Parola uyuşmuyor!";
     } else {
       errors.passwordRepeat = undefined;
     }
@@ -33,7 +34,7 @@ function UserSignUpPage() {
     errors.passwordRepeat = undefined;
     setPasswordRepeat(event.target.value);
     if (event.target.value != password) {
-      errors.passwordRepeat = "Password mismatch!";
+      errors.passwordRepeat = "Parola uyuşmuyor!";
     } else {
       errors.passwordRepeat = undefined;
     }
@@ -83,19 +84,12 @@ function UserSignUpPage() {
           onChange={onChangePasswordRepeat}
           type={"password"}
         ></Input>
-
-        <div className="text-center m-3">
-          <button
-            className="btn btn-primary"
-            onClick={onClickSignUp}
-            disabled={pendingApiCall || errors.passwordRepeat != undefined}
-          >
-            {pendingApiCall && (
-              <span className="spinner-border spinner-border-sm"></span>
-            )}{" "}
-            Kayıt ol
-          </button>
-        </div>
+        <ButtonWithProgress
+          onClick={onClickSignUp}
+          disabled={pendingApiCall || errors.passwordRepeat != undefined}
+          pendingApiCall={pendingApiCall}
+          text="Kayıt Ol"
+        ></ButtonWithProgress>
       </form>
     </div>
   );
