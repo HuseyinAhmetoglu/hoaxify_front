@@ -30,6 +30,7 @@ function LoginPage() {
     };
     setError(null);
     setPendingApiCall(true);
+
     try {
       await login(creds);
       setPendingApiCall(false);

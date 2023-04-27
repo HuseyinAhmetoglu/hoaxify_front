@@ -1,6 +1,4 @@
-import axios from "axios";
 import React, { useState } from "react";
-import "../bootstrap-override.scss";
 import { signUp } from "../api/apiCalls";
 import Input from "../components/Input";
 import ButtonWithProgress from "../components/ButtonWithProgress";
@@ -10,8 +8,8 @@ function UserSignUpPage() {
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
-  const [pendingApiCall, setPendingApiCall] = useState(false);
   const [errors, setErrors] = useState({});
+  const [pendingApiCall, setPendingApiCall] = useState(false);
 
   const onChangeUsername = (event) => {
     errors.username = undefined;
