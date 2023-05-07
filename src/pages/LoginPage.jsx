@@ -1,11 +1,14 @@
 import React from "react";
 import Input from "../components/Input";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { useNavigate } from "react-router-dom";
+import { Authentication } from "../shared/AuthenticationContext";
 
 function LoginPage(props) {
+  const { onLoginSuccess } = useContext(Authentication);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,9 +38,15 @@ function LoginPage(props) {
     setPendingApiCall(true);
 
     try {
-      await login(creds);
+      const response = await login(creds);
       setPendingApiCall(false);
       navigate("/");
+
+      const authState = {
+        ...response.data,
+        password,
+      };
+      onLoginSuccess(authState);
     } catch (apiError) {
       setError(apiError.response.data.message);
       setPendingApiCall(false);

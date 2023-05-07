@@ -5,15 +5,20 @@ import UserPage from "./pages/UserPage";
 import UserSignUpPage from "./pages/UserSignUpPage";
 import ApiProgress from "./shared/ApiProgress";
 import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
+import { Authentication } from "./shared/AuthenticationContext";
+import { useContext } from "react";
+
 function App() {
+  const { isLoggedIn } = useContext(Authentication);
+
   return (
     <div>
       <BrowserRouter>
         <TopBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<UserSignUpPage />} />
+          {!isLoggedIn && <Route path="/login" element={<LoginPage />} />}
+          {!isLoggedIn && <Route path="/signup" element={<UserSignUpPage />} />}
           <Route path="/user/:username" element={<UserPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>

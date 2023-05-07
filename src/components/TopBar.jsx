@@ -1,11 +1,11 @@
 import React from "react";
-import { useState } from "react";
+import { useContext } from "react";
 import logo from "../assets/react.svg";
 import { Link } from "react-router-dom";
+import { Authentication } from "../shared/AuthenticationContext";
 
 function TopBar() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("user1");
+  const { isLoggedIn, username, onLogoutSuccess } = useContext(Authentication);
 
   let links = (
     <ul className="navbar-nav">
@@ -30,7 +30,13 @@ function TopBar() {
             {username}
           </Link>
         </li>
-        <li className="nav-link">logout</li>
+        <li
+          className="nav-link"
+          onClick={onLogoutSuccess}
+          style={{ cursor: "pointer" }}
+        >
+          logout
+        </li>
       </ul>
     );
   }
