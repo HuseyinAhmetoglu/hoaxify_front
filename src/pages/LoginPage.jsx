@@ -3,14 +3,17 @@ import Input from "../components/Input";
 import { useState } from "react";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
   const buttonEnabled = username && password;
+
+  const navigate = useNavigate();
 
   const onChangeUsername = (event) => {
     setError(null);
@@ -34,6 +37,7 @@ function LoginPage() {
     try {
       await login(creds);
       setPendingApiCall(false);
+      navigate("/");
     } catch (apiError) {
       setError(apiError.response.data.message);
       setPendingApiCall(false);
