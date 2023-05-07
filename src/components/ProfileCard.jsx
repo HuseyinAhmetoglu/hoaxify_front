@@ -6,7 +6,7 @@ function ProfileCard() {
   const { username } = useContext(Authentication);
   const params = useParams();
   let message = "We cannot edit";
-  if (username == params.username) {
+  if (username === params.username) {
     message = "We can edit";
   }
   return <div>{message}</div>;

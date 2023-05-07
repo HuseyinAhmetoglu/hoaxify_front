@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Input from "../components/Input";
-import { useState, useContext } from "react";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { useNavigate } from "react-router-dom";
 import { Authentication } from "../shared/AuthenticationContext";
 
-function LoginPage(props) {
+function LoginPage() {
   const { onLoginSuccess } = useContext(Authentication);
 
   const [username, setUsername] = useState("");
@@ -18,15 +17,9 @@ function LoginPage(props) {
 
   const navigate = useNavigate();
 
-  const onChangeUsername = (event) => {
-    setError(null);
-    setUsername(event.target.value);
-  };
-
-  const onChangePassword = (event) => {
-    setError(null);
-    setPassword(event.target.value);
-  };
+  useEffect(() => {
+    setError(undefined);
+  }, [username, password]);
 
   const onClickLogin = async (event) => {
     event.preventDefault();
@@ -34,7 +27,7 @@ function LoginPage(props) {
       username,
       password,
     };
-    setError(null);
+    setError(undefined);
     setPendingApiCall(true);
 
     try {
@@ -57,10 +50,17 @@ function LoginPage(props) {
     <div className="container">
       <h1 className="text-center">Giriş</h1>
       <form>
-        <Input label="Kullanıcı Adı" onChange={onChangeUsername}></Input>
+        <Input
+          label="Kullanıcı Adı"
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
+        ></Input>
         <Input
           label="Parola"
-          onChange={onChangePassword}
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
           type="password"
         ></Input>
         {error && <div className="alert alert-danger">{error}</div>}
