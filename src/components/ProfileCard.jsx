@@ -1,6 +1,5 @@
 import React from "react";
 import { useParams } from "react-router";
-import { connect } from "react-redux";
 import { useSelector } from "react-redux";
 
 function ProfileCard() {

@@ -1,7 +1,6 @@
 import React from "react";
 import logo from "../assets/react.svg";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
 import { logoutSuccess } from "../redux/authActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
