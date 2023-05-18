@@ -1,6 +1,15 @@
 import React, { useState, createContext, useEffect } from "react";
+import SecureLS from "secure-ls";
 
-export const Authentication = createContext();
+export const Authentication = createContext({
+  isLoggedIn: false,
+  username: undefined,
+  displayName: undefined,
+  image: undefined,
+  password: undefined,
+  onLoginSuccess: (authState) => {},
+  onLogoutSuccess: () => {},
+});
 
 function AuthenticationContext({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -9,18 +18,17 @@ function AuthenticationContext({ children }) {
   const [image, setImage] = useState(undefined);
   const [password, setPassword] = useState(undefined);
 
+  const secureLs = new SecureLS();
+
   useEffect(() => {
-    const hoaxAuth = localStorage.getItem("hoax-auth");
+    const hoaxAuth = secureLs.get("hoax-auth");
 
     if (hoaxAuth) {
-      try {
-        const hoaxAuthParse = JSON.parse(hoaxAuth);
-        setIsLoggedIn(hoaxAuthParse.isLoggedIn);
-        setUsername(hoaxAuthParse.username);
-        setDisplayName(hoaxAuthParse.displayName);
-        setImage(hoaxAuthParse.image);
-        setPassword(hoaxAuthParse.password);
-      } catch (error) {}
+      setIsLoggedIn(hoaxAuth.isLoggedIn);
+      setUsername(hoaxAuth.username);
+      setDisplayName(hoaxAuth.displayName);
+      setImage(hoaxAuth.image);
+      setPassword(hoaxAuth.password);
     }
   });
 
@@ -38,7 +46,7 @@ function AuthenticationContext({ children }) {
       image: authState.image,
       password: authState.password,
     };
-    localStorage.setItem("hoax-auth", JSON.stringify(state));
+    secureLs.set("hoax-auth", state);
   };
 
   const onLogoutSuccess = () => {
@@ -47,13 +55,6 @@ function AuthenticationContext({ children }) {
     setDisplayName(undefined);
     setImage(undefined);
     setPassword(undefined);
-    const state = {
-      isLoggedIn: false,
-      username: undefined,
-      displayName: undefined,
-      image: undefined,
-      password: undefined,
-    };
     localStorage.removeItem("hoax-auth");
   };
 

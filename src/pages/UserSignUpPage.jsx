@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { signUp } from "../api/apiCalls";
 import Input from "../components/Input";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { useEffect } from "react";
 
 function UserSignUpPage() {
   const [username, setUsername] = useState("");
@@ -11,32 +12,18 @@ function UserSignUpPage() {
   const [errors, setErrors] = useState({});
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
-  const onChangeUsername = (event) => {
+  useEffect(() => {
     errors.username = undefined;
-    setUsername(event.target.value);
-  };
-  const onChangeDisplayName = (event) => {
+  }, [username]);
+  useEffect(() => {
     errors.displayName = undefined;
-    setDisplayName(event.target.value);
-  };
-  const onChangePassword = (event) => {
+  }, [displayName]);
+  useEffect(() => {
     errors.password = undefined;
-    setPassword(event.target.value);
-    if (event.target.value != passwordRepeat) {
-      errors.passwordRepeat = "Parola uyuşmuyor!";
-    } else {
-      errors.passwordRepeat = undefined;
-    }
-  };
-  const onChangePasswordRepeat = (event) => {
+  }, [password]);
+  useEffect(() => {
     errors.passwordRepeat = undefined;
-    setPasswordRepeat(event.target.value);
-    if (event.target.value != password) {
-      errors.passwordRepeat = "Parola uyuşmuyor!";
-    } else {
-      errors.passwordRepeat = undefined;
-    }
-  };
+  }, [passwordRepeat]);
 
   const onClickSignUp = async (event) => {
     event.preventDefault();
@@ -56,6 +43,10 @@ function UserSignUpPage() {
     }
   };
 
+  if (password != passwordRepeat) {
+    errors.passwordRepeat = "Parola uyuşmuyor!";
+  }
+
   return (
     <div className="container">
       <h1 className="text-center">Kayıt Ol</h1>
@@ -63,23 +54,31 @@ function UserSignUpPage() {
         <Input
           label="Kullanıcı Adı"
           error={errors.username}
-          onChange={onChangeUsername}
+          onChange={(event) => {
+            setUsername(event.target.value);
+          }}
         ></Input>
         <Input
           label="Tercih edilen isim"
           error={errors.displayName}
-          onChange={onChangeDisplayName}
+          onChange={(event) => {
+            setDisplayName(event.target.value);
+          }}
         ></Input>
         <Input
           label="Parola"
           error={errors.password}
-          onChange={onChangePassword}
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
           type={"password"}
         ></Input>
         <Input
           label="Parolayı Tekrarla"
           error={errors.passwordRepeat}
-          onChange={onChangePasswordRepeat}
+          onChange={(event) => {
+            setPasswordRepeat(event.target.value);
+          }}
           type={"password"}
         ></Input>
         <ButtonWithProgress

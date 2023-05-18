@@ -1,12 +1,9 @@
 import React from "react";
-import { useContext } from "react";
 import logo from "../assets/react.svg";
 import { Link } from "react-router-dom";
-import { Authentication } from "../shared/AuthenticationContext";
-
-function TopBar() {
-  const { isLoggedIn, username, onLogoutSuccess } = useContext(Authentication);
-
+import { connect } from "react-redux";
+import { logoutSuccess } from "../redux/authActions";
+function TopBar({ isLoggedIn, username, onLogoutSuccess }) {
   let links = (
     <ul className="navbar-nav">
       <li>
@@ -56,4 +53,18 @@ function TopBar() {
   );
 }
 
-export default TopBar;
+const mapStateToProps = (store) => {
+  return {
+    isLoggedIn: store.isLoggedIn,
+    username: store.username,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogoutSuccess: () => {
+      return dispatch(logoutSuccess());
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

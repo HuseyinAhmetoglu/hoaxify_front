@@ -3,11 +3,10 @@ import Input from "../components/Input";
 import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { useNavigate } from "react-router-dom";
-import { Authentication } from "../shared/AuthenticationContext";
+import { connect } from "react-redux";
+import { loginSuccess } from "../redux/authActions";
 
-function LoginPage() {
-  const { onLoginSuccess } = useContext(Authentication);
-
+function LoginPage({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,6 +38,7 @@ function LoginPage() {
         ...response.data,
         password,
       };
+
       onLoginSuccess(authState);
     } catch (apiError) {
       setError(apiError.response.data.message);
@@ -75,4 +75,12 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLoginSuccess: (authState) => {
+      return dispatch(loginSuccess(authState));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(LoginPage);
