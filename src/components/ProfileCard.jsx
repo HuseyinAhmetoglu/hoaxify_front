@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
-import { Authentication } from "../shared/AuthenticationContext";
+import React from "react";
 import { useParams } from "react-router";
+import { connect } from "react-redux";
 
-function ProfileCard() {
-  const { username } = useContext(Authentication);
+function ProfileCard({ username }) {
   const params = useParams();
   let message = "We cannot edit";
   if (username === params.username) {
@@ -12,4 +11,10 @@ function ProfileCard() {
   return <div>{message}</div>;
 }
 
-export default ProfileCard;
+const mapStateToProps = (store) => {
+  return {
+    username: store.username,
+  };
+};
+
+export default connect(mapStateToProps)(ProfileCard);

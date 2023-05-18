@@ -3,14 +3,10 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import UserSignUpPage from "./pages/UserSignUpPage";
-import ApiProgress from "./shared/ApiProgress";
 import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
-import { Authentication } from "./shared/AuthenticationContext";
-import { useContext } from "react";
+import { connect } from "react-redux";
 
-function App() {
-  const { isLoggedIn } = useContext(Authentication);
-
+function App({ isLoggedIn }) {
   return (
     <div>
       <BrowserRouter>
@@ -27,4 +23,10 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = (store) => {
+  return {
+    isLoggedIn: store.isLoggedIn,
+  };
+};
+
+export default connect(mapStateToProps)(App);
