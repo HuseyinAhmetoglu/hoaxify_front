@@ -1,50 +1,59 @@
 import React, { useState } from "react";
-import { signUp } from "../api/apiCalls";
 import Input from "../components/Input";
 import ButtonWithProgress from "../components/ButtonWithProgress";
-import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import { signUpHandler } from "../redux/authActions";
+import { useDispatch } from "react-redux";
 
 function UserSignUpPage() {
-  const [username, setUsername] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [form, setForm] = useState({
+    username: null,
+    displayName: null,
+    password: null,
+    passwordRepeat: null,
+  });
+
   const [errors, setErrors] = useState({});
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
-  useEffect(() => {
-    errors.username = undefined;
-  }, [username]);
-  useEffect(() => {
-    errors.displayName = undefined;
-  }, [displayName]);
-  useEffect(() => {
-    errors.password = undefined;
-  }, [password]);
-  useEffect(() => {
-    errors.passwordRepeat = undefined;
-  }, [passwordRepeat]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const onChange = (event) => {
+    const { name, value } = event.target;
+    setErrors((previousErrors) => ({ ...previousErrors, [name]: undefined }));
+    setForm((previousForm) => ({ ...previousForm, [name]: value }));
+  };
 
   const onClickSignUp = async (event) => {
     event.preventDefault();
+    const { username, displayName, password } = form;
     const body = {
       username,
       displayName,
       password,
     };
     setPendingApiCall(true);
-
     try {
-      const response = await signUp(body);
+      await dispatch(signUpHandler(body));
       setPendingApiCall(false);
+      navigate("/");
     } catch (error) {
-      setErrors(error.response.data.validationErrors);
       setPendingApiCall(false);
+      if (error.response.data.validationErrors) {
+        setErrors(error.response.data.validationErrors);
+      }
     }
   };
 
-  if (password != passwordRepeat) {
-    errors.passwordRepeat = "Parola uyuşmuyor!";
+  const {
+    username: usernameError,
+    displayName: displayNameError,
+    password: passwordError,
+  } = errors;
+  let passwordRepeatError;
+  if (form.password !== form.passwordRepeat) {
+    passwordRepeatError = "Parola uyuşmuyor!";
   }
 
   return (
@@ -52,38 +61,34 @@ function UserSignUpPage() {
       <h1 className="text-center">Kayıt Ol</h1>
       <form>
         <Input
+          name="username"
           label="Kullanıcı Adı"
-          error={errors.username}
-          onChange={(event) => {
-            setUsername(event.target.value);
-          }}
+          error={usernameError}
+          onChange={onChange}
         ></Input>
         <Input
+          name="displayName"
           label="Tercih edilen isim"
-          error={errors.displayName}
-          onChange={(event) => {
-            setDisplayName(event.target.value);
-          }}
+          error={displayNameError}
+          onChange={onChange}
         ></Input>
         <Input
+          name="password"
           label="Parola"
-          error={errors.password}
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
+          error={passwordError}
+          onChange={onChange}
           type={"password"}
         ></Input>
         <Input
+          name="passwordRepeat"
           label="Parolayı Tekrarla"
-          error={errors.passwordRepeat}
-          onChange={(event) => {
-            setPasswordRepeat(event.target.value);
-          }}
+          error={passwordRepeatError}
+          onChange={onChange}
           type={"password"}
         ></Input>
         <ButtonWithProgress
           onClick={onClickSignUp}
-          disabled={pendingApiCall || errors.passwordRepeat != undefined}
+          disabled={pendingApiCall || passwordRepeatError != undefined}
           pendingApiCall={pendingApiCall}
           text="Kayıt Ol"
         ></ButtonWithProgress>

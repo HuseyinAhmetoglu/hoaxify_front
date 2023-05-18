@@ -1,20 +1,18 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../components/Input";
-import { login } from "../api/apiCalls";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { useNavigate } from "react-router-dom";
-import { connect } from "react-redux";
-import { loginSuccess } from "../redux/authActions";
+import { loginHandler } from "../redux/authActions";
+import { useDispatch } from "react-redux";
 
-function LoginPage({ onLoginSuccess }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+function LoginPage() {
+  const [username, setUsername] = useState(undefined);
+  const [password, setPassword] = useState(undefined);
+  const [error, setError] = useState(undefined);
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
-  const buttonEnabled = username && password;
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setError(undefined);
@@ -30,21 +28,16 @@ function LoginPage({ onLoginSuccess }) {
     setPendingApiCall(true);
 
     try {
-      const response = await login(creds);
+      await dispatch(loginHandler(creds));
       setPendingApiCall(false);
       navigate("/");
-
-      const authState = {
-        ...response.data,
-        password,
-      };
-
-      onLoginSuccess(authState);
     } catch (apiError) {
       setError(apiError.response.data.message);
       setPendingApiCall(false);
     }
   };
+
+  const buttonEnabled = username && password;
 
   return (
     <div className="container">
@@ -75,12 +68,4 @@ function LoginPage({ onLoginSuccess }) {
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLoginSuccess: (authState) => {
-      return dispatch(loginSuccess(authState));
-    },
-  };
-};
-
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default LoginPage;

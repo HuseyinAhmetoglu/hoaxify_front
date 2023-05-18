@@ -3,7 +3,23 @@ import logo from "../assets/react.svg";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutSuccess } from "../redux/authActions";
-function TopBar({ isLoggedIn, username, onLogoutSuccess }) {
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
+function TopBar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const onLogoutSuccess = () => {
+    dispatch(logoutSuccess());
+    navigate("/");
+  };
+  const { isLoggedIn, username } = useSelector((store) => {
+    return {
+      isLoggedIn: store.isLoggedIn,
+      username: store.username,
+    };
+  });
+
   let links = (
     <ul className="navbar-nav">
       <li>
@@ -53,18 +69,4 @@ function TopBar({ isLoggedIn, username, onLogoutSuccess }) {
   );
 }
 
-const mapStateToProps = (store) => {
-  return {
-    isLoggedIn: store.isLoggedIn,
-    username: store.username,
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLogoutSuccess: () => {
-      return dispatch(logoutSuccess());
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(TopBar);
+export default TopBar;

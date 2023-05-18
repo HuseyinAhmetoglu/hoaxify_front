@@ -1,20 +1,21 @@
 import React from "react";
 import { useParams } from "react-router";
 import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
-function ProfileCard({ username }) {
+function ProfileCard() {
   const params = useParams();
+  const { username: loggedInUsername } = useSelector((store) => {
+    return {
+      username: store.username,
+    };
+  });
+
   let message = "We cannot edit";
-  if (username === params.username) {
+  if (loggedInUsername === params.username) {
     message = "We can edit";
   }
   return <div>{message}</div>;
 }
 
-const mapStateToProps = (store) => {
-  return {
-    username: store.username,
-  };
-};
-
-export default connect(mapStateToProps)(ProfileCard);
+export default ProfileCard;

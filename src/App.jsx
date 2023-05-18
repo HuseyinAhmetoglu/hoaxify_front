@@ -4,9 +4,15 @@ import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import UserSignUpPage from "./pages/UserSignUpPage";
 import { BrowserRouter, Routes, Route, HashRouter } from "react-router-dom";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 
-function App({ isLoggedIn }) {
+function App() {
+  const { isLoggedIn } = useSelector((store) => {
+    return {
+      isLoggedIn: store.isLoggedIn,
+    };
+  });
+
   return (
     <div>
       <BrowserRouter>
@@ -23,10 +29,4 @@ function App({ isLoggedIn }) {
   );
 }
 
-const mapStateToProps = (store) => {
-  return {
-    isLoggedIn: store.isLoggedIn,
-  };
-};
-
-export default connect(mapStateToProps)(App);
+export default App;

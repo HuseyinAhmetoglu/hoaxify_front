@@ -1,3 +1,5 @@
+// Bu dosyaya REDUX tan dolayı gerek kalmadı!
+
 import React, { useState, createContext, useEffect } from "react";
 import SecureLS from "secure-ls";
 
